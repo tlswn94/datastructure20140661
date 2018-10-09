@@ -1,0 +1,126 @@
+#include <iostream>
+#include <vector>
+#include <cstdio>
+#include <fstream>
+#include <cstring>
+#include <string>
+#include <map>
+
+using namespace std;
+
+struct city {
+
+	string from;
+	string to;
+	int charge;
+
+};
+
+
+
+string FindKeyByValue(map<string, int> a, int b)
+{
+	map<string, int>::iterator iter;
+	for (iter = a.begin(); iter != a.end(); iter++)
+	{
+
+		if (iter->second == b)
+		{
+			return iter->first;
+		}
+
+	}
+
+
+
+}
+
+
+
+
+
+
+
+int main()
+{
+	vector<pair<int, int>> citylist[50];//vector 컨테이너 안에 pair 컨테이너를 이용하여 도착도시의 number와 항공권가격 설정
+    int cityindex = 0;
+	map<string, int> citynumbering;
+	
+	city temp_city;
+	ifstream is;
+	
+
+
+	is.open("Tuesday.txt");
+
+
+	if (is.is_open() == false)
+	{
+
+
+
+		cout << "파일읽기 에러 프로그램을 종료합니다." << endl;
+
+		return false;
+
+
+
+	}
+
+	while(is.eof()==false)
+	{
+		
+		
+		is >> temp_city.from >> temp_city.to >> temp_city.charge;
+
+		
+		if (citynumbering.find(temp_city.from) == citynumbering.end())
+		{
+
+
+			citynumbering.insert(make_pair(temp_city.from, cityindex++));
+
+		}
+		
+
+		if (citynumbering.find(temp_city.to) == citynumbering.end())
+		{
+			citynumbering.insert(make_pair(temp_city.to, cityindex++));
+
+		}
+
+		citylist[citynumbering[temp_city.from]].push_back(make_pair(citynumbering[temp_city.to], temp_city.charge));
+
+	}
+
+	is.close();
+
+	
+	
+	for (int i = 0; i < 47; i++)
+	{
+		
+		cout<<i<<":" << FindKeyByValue(citynumbering, i) << endl;
+		
+		for (int j = 0; j < citylist[i].size(); j++)
+		{
+
+			cout << FindKeyByValue(citynumbering, citylist[i][j].first) << "->" << citylist[i][j].second << " ";
+
+
+
+		}
+
+		cout << endl;
+		
+	}
+	
+
+	
+	system("PAUSE");
+	
+
+	
+
+}
